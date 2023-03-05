@@ -1,3 +1,4 @@
+#%%
 from datetime import datetime
 import json
 import pandas as pd
@@ -5,6 +6,7 @@ import requests
 from sqlalchemy import create_engine
 from base64 import b64encode
 
+#%%
 def get_page(url, page = False, size = 100):
     if page:
         url = f'{url}&page={page}&size={size}&pav=false'
@@ -25,6 +27,7 @@ def get_page(url, page = False, size = 100):
         job_keys = list(json_response.keys())
         return json_response, job_keys
 
+#%%
 positions = [
     # 'SAP-Entwickler/SAP-Berater',
     # 'IT-Projektmanager',
@@ -43,6 +46,7 @@ positions = [
     # 'Projektmanager',
     ]
 
+# %%
 base_url = "https://rest.arbeitsagentur.de/"
 extended_url = "jobboerse/jobsuche-service/pc/v4/jobs?angebotsart=1&was="
 joblist = []
@@ -73,6 +77,8 @@ for position in positions:
                             'refnr' : listing['refnr'],
                             'job_id': job_id
                             })
+            
+#%%
 df_joblist = pd.DataFrame(joblist).drop_duplicates()
 for job_id in df_joblist['job_id']:
     extended_url = 'jobboerse/jobsuche-service/pc/v2/jobdetails/'
