@@ -79,6 +79,8 @@ for position in positions:
                             })
             
 #%%
+fertigkeiten = []
+i = 0
 df_joblist = pd.DataFrame(joblist).drop_duplicates()
 for job_id in df_joblist['job_id']:
     extended_url = 'jobboerse/jobsuche-service/pc/v2/jobdetails/'
@@ -88,5 +90,10 @@ for job_id in df_joblist['job_id']:
     if 'externeUrl' in job_keys:
         pass
     if 'fertigkeiten' in job_keys:
-        print(refnr, '\n')
-        print(job_response['fertigkeiten'], '\n')
+        fertigkeiten.append({
+            'refnr' : df_joblist['refnr'][i],
+            'fertigkeiten' : job_response['fertigkeiten'] # Erinnerung: für jede fertigkeit eine spalte mit ausprägung als wert
+        })
+    i += 1
+df_fertigkeiten = pd.DataFrame(fertigkeiten)
+print(df_fertigkeiten)
