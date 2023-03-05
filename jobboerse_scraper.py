@@ -15,39 +15,40 @@ def get_page(url, page = False, size = 100):
     json_response = json.loads(response.text)
     
     if page:
-        max_ergebnisse = json_response['maxErgebnisse']
-        stellenangebote = json_response['maxErgebnisse']
+        try:
+            max_ergebnisse = json_response['maxErgebnisse']
+            stellenangebote = json_response['stellenangebote']
+        except Exception as e:
+            raise(e)
         return stellenangebote, max_ergebnisse, size
     else:
-        job_keys = list(job_response.keys())
+        job_keys = list(json_response.keys())
         return json_response, job_keys
 
 positions = [
-    'SAP-Entwickler/SAP-Berater',
-    'IT-Projektmanager',
-    'Softwareentwickler',
-    'Business Intelligence Analyst',
-    'IT-Controller',
-    'IT-Berater',
-    'Produktmanager',
-    'App-Entwickler',
-    'Anwendungsentwickler',
-    'Datenbankspezialist',
-    'ERP Manager',
+    # 'SAP-Entwickler/SAP-Berater',
+    # 'IT-Projektmanager',
+    # 'Softwareentwickler',
+    # 'Business Intelligence Analyst',
+    # 'IT-Controller',
+    # 'IT-Berater',
+    # 'Produktmanager',
+    # 'App-Entwickler',
+    # 'Anwendungsentwickler',
+    # 'Datenbankspezialist',
+    # 'ERP Manager',
     'Data Analyst',
-    'Data Scientist',
-    'Data Engineer',
-    'Projektmanager',
+    # 'Data Scientist',
+    # 'Data Engineer',
+    # 'Projektmanager',
     ]
 
 base_url = "https://rest.arbeitsagentur.de/"
-jobboerse = "jobboerse/jobsuche-service/pc/v4/jobs?angebotsart=1&was="
-fertigkeiten_count = 0
-joblistings = []
-listings_keys = []
+extended_url = "jobboerse/jobsuche-service/pc/v4/jobs?angebotsart=1&was="
+joblist = []
 
 for position in positions:
-    joblist_url = f'{base_url}{jobboerse}{position}'
+    joblist_url = f'{base_url}{extended_url}{position}'
     page = 1
     page_bool = True
     while page_bool == True:
@@ -62,33 +63,24 @@ for position in positions:
 
         i = 0
         for listing in stellenangebote:
-            joblistings.append(listing)
-            refnr = stellenangebote[i]['refnr']
+            refnr = listing['refnr']
 
             # encoding refnr to get the encoded job_id
             code_bytes = bytes(refnr, 'utf-8')
             encoded_code = b64encode(code_bytes)
             job_id = encoded_code.decode()
+            joblist.append({
+                            'refnr' : listing['refnr'],
+                            'job_id': job_id
+                            })
+df_joblist = pd.DataFrame(joblist).drop_duplicates()
+for job_id in df_joblist['job_id']:
+    extended_url = 'jobboerse/jobsuche-service/pc/v2/jobdetails/'
+    job_url = f'{base_url}{extended_url}{job_id}'
+    job_response, job_keys = get_page(job_url)
 
-            job_url = f"{base_url}jobboerse/jobsuche-service/pc/v2/jobdetails/{job_id}"
-            job_response, job_keys = get_page(job_url)
-            
-            for k in job_keys:
-                listings_keys.append(k)
-            
-            # if 'externeUrl' in job_keys:
-            #     pass
-            # if 'fertigkeiten' in job_keys:
-            #     # print(refnr, '\n')
-            #     # print(job_keys, '\n')
-            #     # print(job_json_response['fertigkeiten'], '\n')
-            #     fertigkeiten_count += 1
-            listing.update({'job_id':job_id})
-            joblistings.append(listing)
-            i += 1
-
-    df_joblistings = pd.DataFrame(joblistings)
-    # print(df_joblistings)
-    # print(fertigkeiten_count)
-    for value in set(listings_keys):
-        print(value, '\n')
+    if 'externeUrl' in job_keys:
+        pass
+    if 'fertigkeiten' in job_keys:
+        print(refnr, '\n')
+        print(job_response['fertigkeiten'], '\n')
