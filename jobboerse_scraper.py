@@ -1,10 +1,11 @@
 #%%
-from datetime import datetime
 import json
+import math
 import pandas as pd
 import requests
 from sqlalchemy import create_engine
 from base64 import b64encode
+
 
 #%%
 def get_page(url, page = False, size = 100):
@@ -58,7 +59,7 @@ for position in positions:
     while page_bool == True:
         stellenangebote, max_ergebnisse, size = get_page(joblist_url, page)
         if page == 1 and page_bool == True:
-            page = (max_ergebnisse // size)+1
+            page = math.ceil((max_ergebnisse / size))
         else:
             if page == 2:
                 page_bool = False
@@ -78,10 +79,11 @@ for position in positions:
                             'job_id': job_id
                             })
             
+df_joblist = pd.DataFrame(joblist).drop_duplicates()
+
 #%%
 fertigkeiten = []
 i = 0
-df_joblist = pd.DataFrame(joblist).drop_duplicates()
 for job_id in df_joblist['job_id']:
     extended_url = 'jobboerse/jobsuche-service/pc/v2/jobdetails/'
     job_url = f'{base_url}{extended_url}{job_id}'
