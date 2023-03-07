@@ -123,12 +123,20 @@ for job_id in df_joblist['job_id']:
         except Exception as e:
             logging.error(e)
 
+        hierarchienamen = []
+        auspraegungen = []
+        for item in job_response['fertigkeiten']:
+            hierarchienamen.append(item['hierarchieName'])
+            hierarchienamen.append(item['auspraegungen'])
+    
+        placeholder =''
         if refnr:
             fertigkeiten.append({
                 'refnr' : refnr,
-                'fertigkeiten' : job_response['fertigkeiten'] # Erinnerung: für jede fertigkeit eine spalte mit ausprägung als wert
+                'fertigkeiten' : placeholder # Erinnerung: für jede fertigkeit eine spalte mit ausprägung als wert
             })
     i += 1
+# print('\n', set(hierarchienamen))
 df_fertigkeiten = pd.DataFrame(fertigkeiten)
 logging.info(f'{len(df_fertigkeiten)} items in df_fertigkeiten.')
-print(df_fertigkeiten)
+# print(df_fertigkeiten)
