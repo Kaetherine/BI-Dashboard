@@ -57,13 +57,13 @@ for position in positions:
     page = 1
     page_bool = True
     while page_bool == True:
-        stellenangebote, max_ergebnisse, size = get_page(joblist_url, page)
+        stellenangebote, max_ergebnisse, size = get_page(joblist_url, page, 100)
         if page == 1 and page_bool == True:
             page = math.ceil((max_ergebnisse / size))
         else:
             if page == 2:
                 page_bool = False
-                break
+                pass
             page -= 1
 
         i = 0
@@ -80,7 +80,6 @@ for position in positions:
                             })
             
 df_joblist = pd.DataFrame(joblist).drop_duplicates()
-
 #%%
 fertigkeiten = []
 i = 0
