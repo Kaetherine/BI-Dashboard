@@ -130,4 +130,4 @@ for job_id in df_joblist['job_id']:
     i += 1
 df_fertigkeiten = pd.DataFrame(fertigkeiten)
 logging.info(f'{len(df_fertigkeiten)} items in df_fertigkeiten.')
-# print(df_fertigkeiten)
+print(df_fertigkeiten)
