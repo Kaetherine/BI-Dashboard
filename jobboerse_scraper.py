@@ -16,15 +16,15 @@ logging.basicConfig(
 
 #%%
 def get_page(url, page = False, size = 100):
+    '''Takes the joblist and jobdetails url and returns its assets.'''
+    if size > 100:
+        size = 100
     if page:
         url = f'{url}&page={page}&size={size}&pav=false'
     try:
         response = requests.get(url)
     except Exception as e:
-        logging.error(
-            f'''No response.
-            url: {url}''', '\n', e
-        )
+        logging.error(e)
         pass
 
     if response:
@@ -75,7 +75,7 @@ for position in positions:
     page_bool = True
     while page_bool == True:
         stellenangebote, max_ergebnisse, size, status = get_page(
-            joblist_url, page, 100
+            joblist_url, page, 25
             )
         if status == 200:
             if page == 1 and page_bool == True:
@@ -103,6 +103,7 @@ for position in positions:
  
 df_joblist = pd.DataFrame(joblist).drop_duplicates()
 logging.info(f'{len(df_joblist)} items in df_joblist.')
+
 #%%
 fertigkeiten = []
 i = 0
