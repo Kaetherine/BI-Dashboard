@@ -48,8 +48,8 @@ positions = [
     ]
 
 # %%
-base_url = "https://rest.arbeitsagentur.de/"
-extended_url = "jobboerse/jobsuche-service/pc/v4/jobs?angebotsart=1&was="
+base_url = 'https://rest.arbeitsagentur.de/'
+extended_url = 'jobboerse/jobsuche-service/pc/v4/jobs?angebotsart=1&was='
 joblist = []
 
 for position in positions:
