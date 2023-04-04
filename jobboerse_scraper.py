@@ -105,30 +105,37 @@ df_joblist = pd.DataFrame(joblist).drop_duplicates()
 logging.info(f'{len(df_joblist)} items in df_joblist.')
 
 #%%
-fertigkeiten = []
+fertigkeiten_dict = []
 i = 0
 for job_id in df_joblist['job_id']:
     extended_url = 'jobboerse/jobsuche-service/pc/v2/jobdetails/'
     job_url = f'{base_url}{extended_url}{job_id}'
     try:
         job_response, job_keys, status = get_page(job_url)
+        status
     except Exception as e:
         logging.error(e)
 
     if 'externeUrl' in job_keys:
         pass
     if 'fertigkeiten' in job_keys:
+        fertigkeiten_k = job_response['fertigkeiten'][0]['auspraegungen']
         try:
             refnr = df_joblist['refnr'][i]
         except Exception as e:
             logging.error(e)
 
         if refnr:
-            fertigkeiten.append({
-                'refnr' : refnr,
-                'fertigkeiten' : job_response['fertigkeiten'] # Erinnerung: für jede fertigkeit eine spalte mit ausprägung als wert
-            })
+           temp = {}
+           temp['refnr'] = refnr
+           for k in fertigkeiten_k:
+            for fertigkeit in fertigkeiten_k[k]:
+                temp[fertigkeit] = k
+        fertigkeiten_dict.append(temp)
     i += 1
-df_fertigkeiten = pd.DataFrame(fertigkeiten)
-logging.info(f'{len(df_fertigkeiten)} items in df_fertigkeiten.')
-print(df_fertigkeiten)
+
+#%%
+print(len(fertigkeiten_dict))
+df_fertigkeiten = pd.DataFrame(fertigkeiten_dict)
+df_fertigkeiten.to_excel('df_fertigkeiten.xlsx')
+# %%
