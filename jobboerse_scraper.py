@@ -51,11 +51,11 @@ positions = [
     # 'IT-Projektmanager',
     # 'Softwareentwickler',
     # 'Business Intelligence Analyst',
-    # 'IT-Controller',
+    'IT-Controller',
     # 'IT-Berater',
     # 'Produktmanager',
     # 'App-Entwickler',
-    # 'Anwendungsentwickler',
+    'Anwendungsentwickler',
     # 'Datenbankspezialist',
     # 'ERP Manager',
     'Data Analyst',
@@ -126,11 +126,18 @@ for job_id in df_joblist['job_id']:
             logging.error(e)
 
         if refnr:
-           temp = {}
-           temp['refnr'] = refnr
-           for k in fertigkeiten_k:
-            for fertigkeit in fertigkeiten_k[k]:
-                temp[fertigkeit] = k
+            temp = {}
+            temp['refnr'] = refnr
+            for k in fertigkeiten_k:
+                for fertigkeit in fertigkeiten_k[k]:
+                    # temp[fertigkeit] = k
+                    temp[fertigkeit] = 1
+            if 'titel' in job_keys:
+                temp['titel'] = job_response['titel']
+            if 'beruf' in job_keys:
+                temp['beruf'] = job_response['beruf']
+            if 'fuehrungskompetenzen' in job_keys:
+                temp['fuehrungskompetenzen'] = job_response['fuehrungskompetenzen']
         fertigkeiten_dict.append(temp)
     i += 1
 
