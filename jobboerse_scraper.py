@@ -105,7 +105,7 @@ df_joblist = pd.DataFrame(joblist).drop_duplicates()
 logging.info(f'{len(df_joblist)} items in df_joblist.')
 
 #%%
-fertigkeiten_dict = []
+fertigkeiten = []
 i = 0
 for job_id in df_joblist['job_id']:
     extended_url = 'jobboerse/jobsuche-service/pc/v2/jobdetails/'
@@ -138,11 +138,12 @@ for job_id in df_joblist['job_id']:
                     temp[fertigkeit] = 1
             # if 'fuehrungskompetenzen' in job_keys:
             #     temp['fuehrungskompetenzen'] = job_response['fuehrungskompetenzen']
-        fertigkeiten_dict.append(temp)
+        fertigkeiten.append(temp)
     i += 1
 
 #%%
-print(len(fertigkeiten_dict))
-df_fertigkeiten = pd.DataFrame(fertigkeiten_dict)
+print(len(fertigkeiten))
+df_fertigkeiten = pd.DataFrame(fertigkeiten)
+print(df_fertigkeiten)
 df_fertigkeiten.to_excel('df_fertigkeiten.xlsx')
 # %%
