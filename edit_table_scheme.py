@@ -1,12 +1,13 @@
 #%%
 import pymysql
 import pandas as pd
+from credentials import user, password
 
 #%%
 connection = pymysql.connect(
                         host='localhost',
-                        user='',
-                        password='',
+                        user=user,
+                        password=password,
                         db='bi_dashboard_db'
                         )
 
