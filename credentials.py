@@ -1,0 +1,2 @@
+user = 'Katherine'
+password = 'root'
