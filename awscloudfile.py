@@ -1,3 +1,3 @@
 testvariable = "My Name is Katherine"
 if testvariable:
-	print(testvariable, 'test')
+	print(testvariable)
