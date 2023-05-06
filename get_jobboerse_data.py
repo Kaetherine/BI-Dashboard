@@ -30,6 +30,7 @@ def get_page(url, page = False, size = 100):
     if response:
         json_response = json.loads(response.text)
         status = response.status_code
+        print(json_response)
     
         if page:
             try:
@@ -41,6 +42,7 @@ def get_page(url, page = False, size = 100):
             return stellenangebote, max_ergebnisse, size, status
         else:
             job_keys = list(json_response.keys())
+            print(job_keys)
             return json_response, job_keys, status
     else:
         pass
@@ -100,7 +102,7 @@ for position in positions:
                                 })
         else:
             pass
- 
+print('stop')
 df_joblist = pd.DataFrame(joblist).drop_duplicates()
 logging.info(f'{len(df_joblist)} items in df_joblist.')
 
@@ -146,4 +148,4 @@ print(len(fertigkeiten))
 df_fertigkeiten = pd.DataFrame(fertigkeiten)
 print(df_fertigkeiten)
 df_fertigkeiten.to_excel('df_fertigkeiten.xlsx')
-# %%
+# # %%
